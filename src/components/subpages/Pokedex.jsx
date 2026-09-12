@@ -8,8 +8,15 @@ const Pokedex = () => {
       {isLoading && <p>Wczytywanie danych...</p>}
       {error && <p>{error}</p>}
       <ul>
-        {pokemons.map(({ name, url }) => {
-          return <li key={name}>{name}</li>;
+        {pokemons.map(({ id, name, height, weight, base_experience }) => {
+          return (
+            <li key={id}>
+              <p>{name.toUpperCase()}</p>
+              <p>Weight: {weight}</p>
+              <p>Height: {height}</p>
+              <p>XP: {base_experience}</p>
+            </li>
+          );
         })}
       </ul>
     </>
