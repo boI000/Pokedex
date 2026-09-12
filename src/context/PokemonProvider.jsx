@@ -24,9 +24,11 @@ const PokemonProvider = ({ children }) => {
         const pokemonsDetails = await Promise.all(
           result.results.map(async (pokemon) => {
             const response = await fetch(pokemon.url);
+
             if (!response.ok) {
               throw new Error(`Response status: ${response.status}`);
             }
+
             const data = await response.json();
             return data;
           }),
