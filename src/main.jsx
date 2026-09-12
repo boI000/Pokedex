@@ -12,6 +12,7 @@ import Favourites from "./components/subpages/Favourites.jsx";
 import Register from "./components/subpages/Register.jsx";
 import Ranking from "./components/subpages/Ranking.jsx";
 import Login from "./components/subpages/Login.jsx";
+import PokemonProvider from "./context/PokemonProvider.jsx";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <PokemonProvider>
+      <RouterProvider router={router} />
+    </PokemonProvider>
   </StrictMode>,
 );
