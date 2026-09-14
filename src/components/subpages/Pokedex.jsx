@@ -1,4 +1,12 @@
+import styled from "styled-components";
 import { usePokemonContext } from "../../context/PokemonProvider";
+import PokemonCard from "./PokemonCard";
+
+const PokemonGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+`;
 
 const Pokedex = () => {
   const { pokemons, isLoading, error } = usePokemonContext();
@@ -7,18 +15,11 @@ const Pokedex = () => {
     <>
       {isLoading && <p>Wczytywanie danych...</p>}
       {error && <p>{error}</p>}
-      <ul>
-        {pokemons.map(({ id, name, height, weight, base_experience }) => {
-          return (
-            <li key={id}>
-              <p>{name.toUpperCase()}</p>
-              <p>Weight: {weight}</p>
-              <p>Height: {height}</p>
-              <p>XP: {base_experience}</p>
-            </li>
-          );
+      <PokemonGrid>
+        {pokemons.map((pokemon) => {
+          return <PokemonCard pokemon={pokemon} key={pokemon.id} />;
         })}
-      </ul>
+      </PokemonGrid>
     </>
   );
 };
