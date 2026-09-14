@@ -4,7 +4,7 @@ const PokemonContext = createContext();
 
 const PokemonProvider = ({ children }) => {
   const [pokemons, setPokemons] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -35,8 +35,6 @@ const PokemonProvider = ({ children }) => {
         );
 
         setPokemons(pokemonsDetails);
-
-        console.log(result);
       } catch (error) {
         setError(error.message);
       } finally {

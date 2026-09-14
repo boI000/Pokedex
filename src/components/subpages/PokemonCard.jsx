@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 const PokemonCardStyled = styled.article`
-  border: 2px solid black;
   border-radius: 8px;
   background-color: burlywood;
   transition-duration: 250ms;
