@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const PokemonCardStyled = styled.article`
   border: 2px solid black;
@@ -10,16 +11,18 @@ const PokemonCard = ({ pokemon }) => {
   const { id, name, weight, height, base_experience, sprites, types } = pokemon;
 
   return (
-    <PokemonCardStyled>
-      <img src={sprites.front_default} alt={name} />
-      <p>{name.toUpperCase()}</p>
-      {types.map((typeInfo) => {
-        return <p key={typeInfo.type.name}>{typeInfo.type.name}</p>;
-      })}
-      <p>Weight: {weight}</p>
-      <p>Height: {height}</p>
-      <p>XP: {base_experience}</p>
-    </PokemonCardStyled>
+    <Link to={`/pokedex/${id}`}>
+      <PokemonCardStyled>
+        <img src={sprites.front_default} alt={name} />
+        <p>{name.toUpperCase()}</p>
+        {types.map((typeInfo) => {
+          return <p key={typeInfo.type.name}>{typeInfo.type.name}</p>;
+        })}
+        <p>Weight: {weight}</p>
+        <p>Height: {height}</p>
+        <p>XP: {base_experience}</p>
+      </PokemonCardStyled>
+    </Link>
   );
 };
 
