@@ -5,6 +5,11 @@ const PokemonCardStyled = styled.article`
   border: 2px solid black;
   border-radius: 8px;
   background-color: burlywood;
+  transition-duration: 250ms;
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 10px 10px 8px white;
+  }
 `;
 
 const PokemonCard = ({ pokemon }) => {
