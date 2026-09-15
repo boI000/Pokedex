@@ -42,44 +42,105 @@ const PaginationButton = styled.button`
 const Pokedex = () => {
   const { pokemons, isLoading, error } = usePokemonContext();
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+
+  const pokemonTypes = [
+    "",
+    "bug",
+    "dragon",
+    "electric",
+    "fairy",
+    "fighting",
+    "fire",
+    "flying",
+    "ghost",
+    "grass",
+    "ground",
+    "ice",
+    "normal",
+    "poison",
+    "psychic",
+    "rock",
+    "steel",
+    "water",
+  ];
+
+  const filteredPokemons = pokemons.filter((pokemon) => {
+    const matchesSearch = pokemon.name.includes(searchTerm.toLowerCase());
+    const matchesType =
+      selectedType === "" ||
+      pokemon.types.some((typeInfo) => typeInfo.type.name === selectedType);
+
+    return matchesSearch && matchesType;
+  });
 
   const pokemonsPerPage = 15;
 
   const firstIndex = (currentPage - 1) * pokemonsPerPage;
   const lastIndex = currentPage * pokemonsPerPage;
 
-  const paginatedPokemons = pokemons.slice(firstIndex, lastIndex);
+  const paginatedPokemons = filteredPokemons.slice(firstIndex, lastIndex);
 
-  const maxPages = Math.ceil(pokemons.length / pokemonsPerPage);
+  const maxPages = Math.ceil(filteredPokemons.length / pokemonsPerPage);
 
   if (isLoading) return <p>Wczytywanie danych...</p>;
   if (error) return <p>{error}</p>;
   return (
     <>
-      <PokemonGrid>
-        {paginatedPokemons.map((pokemon) => {
-          return <PokemonCard pokemon={pokemon} key={pokemon.id} />;
+      <input
+        value={searchTerm}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+          setCurrentPage(1);
+        }}
+        placeholder="wyszukaj"
+      />
+      <select
+        value={selectedType}
+        onChange={(e) => {
+          setSelectedType(e.target.value);
+          setCurrentPage(1);
+        }}
+      >
+        {pokemonTypes.map((type) => {
+          return (
+            <option key={type} value={type}>
+              {type === "" ? "All types" : type}
+            </option>
+          );
         })}
-      </PokemonGrid>
-      <PaginationWrapper>
-        <PaginationButton
-          $direction="prev"
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage((prev) => prev - 1)}
-        >
-          prev
-        </PaginationButton>
-        <p>
-          {currentPage} / {maxPages}
-        </p>
-        <PaginationButton
-          $direction="next"
-          disabled={currentPage >= maxPages}
-          onClick={() => setCurrentPage((prev) => prev + 1)}
-        >
-          next
-        </PaginationButton>
-      </PaginationWrapper>
+      </select>
+      {filteredPokemons.length === 0 ? (
+        <p>Nie znaleziono pokemonów</p>
+      ) : (
+        <>
+          <PokemonGrid>
+            {paginatedPokemons.map((pokemon) => {
+              return <PokemonCard pokemon={pokemon} key={pokemon.id} />;
+            })}
+          </PokemonGrid>
+          <PaginationWrapper>
+            <PaginationButton
+              $direction="prev"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => prev - 1)}
+            >
+              prev
+            </PaginationButton>
+            <p>
+              {currentPage} / {maxPages}
+            </p>
+            <PaginationButton
+              $direction="next"
+              disabled={currentPage >= maxPages}
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+            >
+              next
+            </PaginationButton>
+          </PaginationWrapper>
+        </>
+      )}
     </>
   );
 };
