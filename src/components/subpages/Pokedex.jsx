@@ -67,7 +67,9 @@ const Pokedex = () => {
   ];
 
   const filteredPokemons = pokemons.filter((pokemon) => {
-    const matchesSearch = pokemon.name.includes(searchTerm.toLowerCase());
+    const matchesSearch = pokemon.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
     const matchesType =
       selectedType === "" ||
       pokemon.types.some((typeInfo) => typeInfo.type.name === selectedType);
