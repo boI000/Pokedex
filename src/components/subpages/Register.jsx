@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSnackbar } from "notistack";
 
 const FormWrapper = styled.div`
   display: flex;
@@ -45,15 +46,55 @@ const Register = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(registerSchema),
     mode: "onSubmit",
     reValidateMode: "onChange",
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const onSubmit = async (data) => {
+    const BASE_URL = "http://localhost:3000/";
+
+    try {
+      const checkResponse = await fetch(
+        `${BASE_URL}users?email=${encodeURIComponent(data.email)}`,
+      );
+      if (!checkResponse.ok) {
+        throw new Error(`Response: ${checkResponse.status}`);
+      }
+      const existingUsers = await checkResponse.json();
+      if (existingUsers.length > 0) {
+        enqueueSnackbar("User with this email already exists", {
+          variant: "warning",
+        });
+        return;
+      }
+
+      const { name, email, password } = data;
+      const userPayload = { name, email, password, favourites: [] };
+
+      const createResponse = await fetch(`${BASE_URL}users`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userPayload),
+      });
+      if (!createResponse.ok) {
+        throw new Error(`Response : ${createResponse.status}`);
+      }
+      enqueueSnackbar("Account created successfully", {
+        variant: "success",
+      });
+      reset();
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar("Error has occurred, try again", {
+        variant: "error",
+      });
+    }
   };
 
   return (
@@ -75,7 +116,9 @@ const Register = () => {
           {...register("repeatPassword")}
         />
         {errors.repeatPassword && <p>{errors.repeatPassword.message}</p>}
-        <button type="submit">Register</button>
+        <button type="submit" disabled={isSubmitting}>
+          Register
+        </button>
       </FormStyle>
     </FormWrapper>
   );

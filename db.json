@@ -1,5 +1,20 @@
 {
-  "users": [],
+  "users": [
+    {
+      "name": "jan",
+      "email": "jankowalski@gmail.com",
+      "password": "Csalvecil12!",
+      "favourites": [],
+      "id": 1
+    },
+    {
+      "name": "jakub",
+      "email": "jakublesniak@gmail.com",
+      "password": "Csalvecil12!",
+      "favourites": [],
+      "id": 2
+    }
+  ],
   "pokemonOverrides": [],
   "customPokemons": []
 }

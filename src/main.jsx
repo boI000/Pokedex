@@ -13,6 +13,7 @@ import Register from "./components/subpages/Register.jsx";
 import Ranking from "./components/subpages/Ranking.jsx";
 import Login from "./components/subpages/Login.jsx";
 import PokemonProvider from "./context/PokemonProvider.jsx";
+import { SnackbarProvider } from "notistack";
 
 const router = createBrowserRouter([
   {
@@ -58,8 +59,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <PokemonProvider>
-      <RouterProvider router={router} />
-    </PokemonProvider>
+    <SnackbarProvider>
+      <PokemonProvider>
+        <RouterProvider router={router} />
+      </PokemonProvider>
+    </SnackbarProvider>
   </StrictMode>,
 );
