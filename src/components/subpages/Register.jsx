@@ -44,6 +44,8 @@ const registerSchema = z
   });
 
 const Register = () => {
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const {
     register,
     handleSubmit,
@@ -55,16 +57,12 @@ const Register = () => {
     reValidateMode: "onChange",
   });
 
-  const { enqueueSnackbar } = useSnackbar();
-
-  const navigate = useNavigate();
-
   const onSubmit = async (data) => {
-    const BASE_URL = "http://localhost:3000/";
+    const BASE_URL = "http://localhost:3000";
 
     try {
       const checkResponse = await fetch(
-        `${BASE_URL}users?email=${encodeURIComponent(data.email)}`,
+        `${BASE_URL}/users?email=${encodeURIComponent(data.email)}`,
       );
       if (!checkResponse.ok) {
         throw new Error(`Response: ${checkResponse.status}`);
@@ -95,7 +93,7 @@ const Register = () => {
       navigate("/login");
     } catch (error) {
       console.error(error);
-      enqueueSnackbar("Error has occurred, try again", {
+      enqueueSnackbar("An error has occurred. Try again!", {
         variant: "error",
       });
     }

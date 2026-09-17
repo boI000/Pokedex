@@ -43,13 +43,10 @@ const AuthProvider = ({ children }) => {
         }
 
         const data = await response.json();
-        console.log(data);
 
         const { id, name, email, favourites } = data;
-
         const userData = { id, name, email, favourites };
-
-        console.log(userData);
+        setCurrentUser(userData);
       } catch (error) {
         console.error(error);
       } finally {
@@ -58,8 +55,6 @@ const AuthProvider = ({ children }) => {
     }
 
     restoreUser();
-
-    console.log(storedUserId);
   }, []);
 
   const value = { currentUser, isAuthLoading, login, logout };
