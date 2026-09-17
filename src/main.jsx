@@ -15,6 +15,7 @@ import Login from "./components/subpages/Login.jsx";
 import PokemonProvider from "./context/PokemonProvider.jsx";
 import { SnackbarProvider } from "notistack";
 import AuthProvider from "./context/AuthProvider.jsx";
+import ProtectedRoute from "./components/shared/ProtectedRoute.jsx";
 
 const router = createBrowserRouter([
   {
@@ -31,18 +32,6 @@ const router = createBrowserRouter([
         element: <PokemonDetails />,
       },
       {
-        path: "add-pokemon",
-        element: <AddPokemon />,
-      },
-      {
-        path: "arena",
-        element: <Arena />,
-      },
-      {
-        path: "favourites",
-        element: <Favourites />,
-      },
-      {
         path: "register",
         element: <Register />,
       },
@@ -53,6 +42,23 @@ const router = createBrowserRouter([
       {
         path: "ranking",
         element: <Ranking />,
+      },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "add-pokemon",
+            element: <AddPokemon />,
+          },
+          {
+            path: "arena",
+            element: <Arena />,
+          },
+          {
+            path: "favourites",
+            element: <Favourites />,
+          },
+        ],
       },
     ],
   },

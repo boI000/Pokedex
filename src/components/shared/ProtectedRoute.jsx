@@ -1,0 +1,19 @@
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuthContext } from "../../context/AuthProvider";
+
+const ProtectedRoute = () => {
+  const { currentUser, isAuthLoading } = useAuthContext();
+
+  if (isAuthLoading) return <p>Loading</p>;
+  if (!currentUser)
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{ message: "You need to log in to access this page" }}
+      />
+    );
+  return <Outlet />;
+};
+
+export default ProtectedRoute;

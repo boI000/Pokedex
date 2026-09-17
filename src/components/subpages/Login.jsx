@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useAuthContext } from "../../context/AuthProvider";
 import { useSnackbar } from "notistack";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const loginSchema = z.object({
   email: z.email({ error: "Provide a valid e-mail address" }).toLowerCase(),
@@ -11,6 +11,7 @@ const loginSchema = z.object({
 });
 
 const Login = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const { login } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
@@ -48,14 +49,14 @@ const Login = () => {
       }
 
       login(user);
-      enqueueSnackbar("Login succefull", {
+      enqueueSnackbar("Login succeful", {
         variant: "success",
       });
       reset();
       navigate("/");
     } catch (error) {
       console.error(error);
-      enqueueSnackbar("An error has occured. Try again!", {
+      enqueueSnackbar("An error has occurred. Try again!", {
         variant: "error",
       });
     }
@@ -63,6 +64,7 @@ const Login = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {location.state?.message && <p>{location.state?.message}</p>}
       <label htmlFor="email">Email</label>
       <input id="email" type="email" {...register("email")} />
       {errors.email && <p>{errors.email.message}</p>}
