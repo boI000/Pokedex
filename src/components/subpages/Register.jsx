@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSnackbar } from "notistack";
+import { Link, useNavigate } from "react-router-dom";
 
 const FormWrapper = styled.div`
   display: flex;
@@ -21,7 +22,7 @@ const registerSchema = z
       .string()
       .trim()
       .min(3, { error: "Name must be at least 3 characters long" }),
-    email: z.email({ error: "Provide a valid e-mail address" }),
+    email: z.email({ error: "Provide a valid e-mail address" }).toLowerCase(),
     password: z
       .string()
       .min(8, { error: "Password must be at least 8 characters long" })
@@ -56,6 +57,8 @@ const Register = () => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const navigate = useNavigate();
+
   const onSubmit = async (data) => {
     const BASE_URL = "http://localhost:3000/";
 
@@ -89,6 +92,7 @@ const Register = () => {
         variant: "success",
       });
       reset();
+      navigate("/login");
     } catch (error) {
       console.error(error);
       enqueueSnackbar("Error has occurred, try again", {
@@ -119,6 +123,7 @@ const Register = () => {
         <button type="submit" disabled={isSubmitting}>
           Register
         </button>
+        <Link to={"/login"}>Already have an account? Log in</Link>
       </FormStyle>
     </FormWrapper>
   );

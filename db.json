@@ -1,5 +1,13 @@
 {
-  "users": [],
+  "users": [
+    {
+      "name": "jan",
+      "email": "kowalski@gmail.com",
+      "password": "Haslo123!",
+      "favourites": [],
+      "id": 1
+    }
+  ],
   "pokemonOverrides": [],
   "customPokemons": []
 }
