@@ -9,9 +9,18 @@
     },
     {
       "name": "Marlenka",
-      "email": "marlenawojas@onet.pl",
-      "password": "Kesikot2!",
-      "favourites": [],
+      "email": "marlenka@onet.pl",
+      "password": "Maslo123!",
+      "favourites": [
+        {
+          "source": "api",
+          "pokemonId": 2
+        },
+        {
+          "source": "api",
+          "pokemonId": 1
+        }
+      ],
       "id": 2
     }
   ],
