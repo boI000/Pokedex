@@ -11,16 +11,7 @@
       "name": "Marlenka",
       "email": "marlenka@onet.pl",
       "password": "Maslo123!",
-      "favourites": [
-        {
-          "source": "api",
-          "pokemonId": 2
-        },
-        {
-          "source": "api",
-          "pokemonId": 1
-        }
-      ],
+      "favourites": [],
       "id": 2
     }
   ],

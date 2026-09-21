@@ -6,6 +6,7 @@ const PokemonProvider = ({ children }) => {
   const [pokemons, setPokemons] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [arenaPokemons, setArenaPokemons] = useState([]);
 
   useEffect(() => {
     async function fetchPokemons() {
@@ -45,7 +46,39 @@ const PokemonProvider = ({ children }) => {
     fetchPokemons();
   }, []);
 
-  const value = { pokemons, isLoading, error };
+  const addToArena = (pokemon) => {
+    setArenaPokemons((previousArena) => {
+      const isAlreadyInArena = previousArena.some(
+        (arenaPokemon) => arenaPokemon.id === pokemon.id,
+      );
+
+      if (previousArena.length === 2) return previousArena;
+      if (isAlreadyInArena) return previousArena;
+      return [...previousArena, pokemon];
+    });
+  };
+
+  const removeFromArena = (pokemonId) => {
+    setArenaPokemons((previousArena) => {
+      return previousArena.filter(
+        (arenaPokemon) => arenaPokemon.id !== pokemonId,
+      );
+    });
+  };
+
+  const clearArena = () => {
+    setArenaPokemons([]);
+  };
+
+  const value = {
+    pokemons,
+    isLoading,
+    error,
+    arenaPokemons,
+    addToArena,
+    removeFromArena,
+    clearArena,
+  };
 
   return (
     <PokemonContext.Provider value={value}>{children}</PokemonContext.Provider>

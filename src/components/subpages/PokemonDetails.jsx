@@ -46,9 +46,9 @@ const BackLink = styled(Link)`
 `;
 
 const PokemonDetails = () => {
-  const { currentUser, updateCurrentUser } = useAuthContext();
   const { id } = useParams();
-  const { pokemons, isLoading, error } = usePokemonContext();
+  const { currentUser, updateCurrentUser } = useAuthContext();
+  const { pokemons, isLoading, error, addToArena } = usePokemonContext();
   const [isUpdating, setIsUpdating] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -135,6 +135,11 @@ const PokemonDetails = () => {
       {currentUser && (
         <button type="button" onClick={toggleFavourite} disabled={isUpdating}>
           {isFavourite ? "Remove from favourites" : "Add to favourites"}
+        </button>
+      )}
+      {currentUser && (
+        <button type="button" onClick={() => addToArena(foundPokemon)}>
+          Add to arena
         </button>
       )}
       <img src={sprites.other["official-artwork"].front_default} alt={name} />
