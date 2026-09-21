@@ -10,11 +10,12 @@ const PokemonProvider = ({ children }) => {
 
   useEffect(() => {
     async function fetchPokemons() {
-      const BASE_URL = "https://pokeapi.co/api/v2";
+      const POKE_API_URL = "https://pokeapi.co/api/v2";
+      const DB_URL = "http://localhost:3000";
       setIsLoading(true);
 
       try {
-        const response = await fetch(`${BASE_URL}/pokemon?limit=150`);
+        const response = await fetch(`${POKE_API_URL}/pokemon?limit=150`);
 
         if (!response.ok) {
           throw new Error(`Response status: ${response.status}`);
@@ -35,7 +36,39 @@ const PokemonProvider = ({ children }) => {
           }),
         );
 
-        setPokemons(pokemonsDetails);
+        const overridesResponse = await fetch(`${DB_URL}/pokemonOverrides`);
+
+        if (!overridesResponse.ok) {
+          throw new Error(`Response: ${overridesResponse.status}`);
+        }
+
+        const overrides = await overridesResponse.json();
+
+        const pokemonsWithOverride = pokemonsDetails.map((pokemon) => {
+          const pokemonOverride = overrides.find(
+            (override) => override.pokemonId === pokemon.id,
+          );
+
+          if (!pokemonOverride) {
+            return { ...pokemon, wins: 0, losses: 0, overrideId: null };
+          }
+
+          const {
+            id: overrideId,
+            pokemonId,
+            ...overrideData
+          } = pokemonOverride;
+
+          return {
+            ...pokemon,
+            wins: 0,
+            losses: 0,
+            ...overrideData,
+            overrideId,
+          };
+        });
+
+        setPokemons(pokemonsWithOverride);
       } catch (error) {
         setError(error.message);
       } finally {
