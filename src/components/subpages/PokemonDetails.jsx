@@ -1,6 +1,9 @@
 import { Link, useParams } from "react-router-dom";
 import { usePokemonContext } from "../../context/PokemonProvider";
 import styled from "styled-components";
+import { useAuthContext } from "../../context/AuthProvider";
+import { useState } from "react";
+import { useSnackbar } from "notistack";
 
 // todo: $types list, styles
 const TypeBadge = styled.span`
@@ -43,8 +46,11 @@ const BackLink = styled(Link)`
 `;
 
 const PokemonDetails = () => {
+  const { currentUser, updateCurrentUser } = useAuthContext();
   const { id } = useParams();
   const { pokemons, isLoading, error } = usePokemonContext();
+  const [isUpdating, setIsUpdating] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   const foundPokemon = pokemons.find(
     (pokemon) => pokemon.id === parseInt(id, 10),
@@ -65,8 +71,72 @@ const PokemonDetails = () => {
     abilities,
   } = foundPokemon;
 
+  const isFavourite = currentUser
+    ? currentUser.favourites.some(
+        (favourite) =>
+          favourite.source === "api" && favourite.pokemonId === foundPokemon.id,
+      )
+    : false;
+
+  const toggleFavourite = async () => {
+    let newFavourites;
+
+    if (isFavourite) {
+      newFavourites = currentUser.favourites.filter(
+        (favourite) =>
+          !(
+            favourite.source === "api" &&
+            favourite.pokemonId === foundPokemon.id
+          ),
+      );
+    } else {
+      const newFavourite = {
+        source: "api",
+        pokemonId: foundPokemon.id,
+      };
+      newFavourites = [...currentUser.favourites, newFavourite];
+    }
+
+    const BASE_URL = "http://localhost:3000";
+    setIsUpdating(true);
+
+    try {
+      const response = await fetch(`${BASE_URL}/users/${currentUser.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ favourites: newFavourites }),
+      });
+      if (!response.ok) {
+        throw new Error(`Response: ${response.status}`);
+      }
+      updateCurrentUser({ favourites: newFavourites });
+
+      if (isFavourite) {
+        enqueueSnackbar("Pokemon has been deleted from favourites", {
+          variant: "warning",
+        });
+      } else {
+        enqueueSnackbar("Pokemon has been added to favourites!", {
+          variant: "success",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar("An error has occurred. Try again!", {
+        variant: "error",
+      });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   return (
     <>
+      {currentUser && (
+        <button type="button" onClick={toggleFavourite} disabled={isUpdating}>
+          {isFavourite ? "Remove from favourites" : "Add to favourites"}
+        </button>
+      )}
       <img src={sprites.other["official-artwork"].front_default} alt={name} />
       <h1>{name.toUpperCase()}</h1>
       <h2>TYPES</h2>

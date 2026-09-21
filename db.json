@@ -6,6 +6,13 @@
       "password": "Haslo123!",
       "favourites": [],
       "id": 1
+    },
+    {
+      "name": "Marlenka",
+      "email": "marlenawojas@onet.pl",
+      "password": "Kesikot2!",
+      "favourites": [],
+      "id": 2
     }
   ],
   "pokemonOverrides": [],

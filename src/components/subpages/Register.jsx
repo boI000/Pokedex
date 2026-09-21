@@ -58,11 +58,11 @@ const Register = () => {
   });
 
   const onSubmit = async (data) => {
-    const BASE_URL = "http://localhost:3000";
+    const BASE_URL = "http://localhost:3000/";
 
     try {
       const checkResponse = await fetch(
-        `${BASE_URL}/users?email=${encodeURIComponent(data.email)}`,
+        `${BASE_URL}users?email=${encodeURIComponent(data.email)}`,
       );
       if (!checkResponse.ok) {
         throw new Error(`Response: ${checkResponse.status}`);

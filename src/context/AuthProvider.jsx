@@ -20,6 +20,17 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem("userId");
   };
 
+  const updateCurrentUser = (updates) => {
+    setCurrentUser((previousUser) => {
+      if (!previousUser) return null;
+
+      return {
+        ...previousUser,
+        ...updates,
+      };
+    });
+  };
+
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     if (!storedUserId) {
@@ -57,7 +68,13 @@ const AuthProvider = ({ children }) => {
     restoreUser();
   }, []);
 
-  const value = { currentUser, isAuthLoading, login, logout };
+  const value = {
+    currentUser,
+    isAuthLoading,
+    login,
+    logout,
+    updateCurrentUser,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

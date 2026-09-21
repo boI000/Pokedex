@@ -86,7 +86,7 @@ const Pokedex = () => {
 
   const maxPages = Math.ceil(filteredPokemons.length / pokemonsPerPage);
 
-  if (isLoading) return <p>Wczytywanie danych...</p>;
+  if (isLoading) return <p>Loading pokemons...</p>;
   if (error) return <p>{error}</p>;
   return (
     <>
