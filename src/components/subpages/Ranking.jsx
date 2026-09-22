@@ -1,5 +1,39 @@
+import { useState } from "react";
+import { usePokemonContext } from "../../context/PokemonProvider";
+import { Link } from "react-router-dom";
+
 const Ranking = () => {
-  return <p>Ranking</p>;
+  const { pokemons, isLoading, error } = usePokemonContext();
+  const [sortBy, setSortBy] = useState("wins");
+
+  const sortedPokemons = [...pokemons].sort((a, b) => b[sortBy] - a[sortBy]);
+
+  if (isLoading) return <p>Loading pokemon ranking...</p>;
+  if (error) return <p>{error}</p>;
+  return (
+    <>
+      <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+        <option value="wins">Wins</option>
+        <option value="base_experience">XP</option>
+        <option value="weight">Weight</option>
+        <option value="height">Height</option>
+      </select>
+      <ul>
+        {sortedPokemons.map(
+          ({ id, name, base_experience, weight, height, wins }) => {
+            return (
+              <li key={id}>
+                <Link to={`/pokedex/${id}`}>
+                  <p>{name}</p>
+                </Link>
+                {`XP: ${base_experience}, Weight: ${weight}, Height: ${height}, Wins: ${wins}`}
+              </li>
+            );
+          },
+        )}
+      </ul>
+    </>
+  );
 };
 
 export default Ranking;
