@@ -1,6 +1,8 @@
 import { useEffect, useState, createContext, useContext } from "react";
 
 const PokemonContext = createContext();
+const POKE_API_URL = "https://pokeapi.co/api/v2";
+const DB_URL = "http://localhost:3000";
 
 const PokemonProvider = ({ children }) => {
   const [pokemons, setPokemons] = useState([]);
@@ -10,8 +12,6 @@ const PokemonProvider = ({ children }) => {
 
   useEffect(() => {
     async function fetchPokemons() {
-      const POKE_API_URL = "https://pokeapi.co/api/v2";
-      const DB_URL = "http://localhost:3000";
       setIsLoading(true);
 
       try {
@@ -103,6 +103,145 @@ const PokemonProvider = ({ children }) => {
     setArenaPokemons([]);
   };
 
+  const saveWinner = async (winnerId) => {
+    const winner = pokemons.find((pokemon) => {
+      return winnerId === pokemon.id;
+    });
+
+    if (!winner) {
+      throw new Error(`Winner with ${winnerId} not found`);
+    }
+
+    const newWins = winner.wins + 1;
+    const newXP = winner.base_experience + 10;
+
+    const firstWin = {
+      pokemonId: winner.id,
+      wins: newWins,
+      base_experience: newXP,
+    };
+
+    if (winner.overrideId === null) {
+      try {
+        const upload = await fetch(`${DB_URL}/pokemonOverrides`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(firstWin),
+        });
+        if (!upload.ok) {
+          throw new Error(`Response: ${upload.status}`);
+        }
+        const uploadResult = await upload.json();
+
+        setPokemons((previousPokemons) =>
+          previousPokemons.map((pokemon) => {
+            return pokemon.id !== winnerId
+              ? pokemon
+              : {
+                  ...pokemon,
+                  wins: newWins,
+                  base_experience: newXP,
+                  overrideId: uploadResult.id,
+                };
+          }),
+        );
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    } else {
+      try {
+        const reupload = await fetch(
+          `${DB_URL}/pokemonOverrides/${winner.overrideId}`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ wins: newWins, base_experience: newXP }),
+          },
+        );
+        if (!reupload.ok) {
+          throw new Error(`Response: ${reupload.status}`);
+        }
+
+        setPokemons((previousPokemons) =>
+          previousPokemons.map((pokemon) => {
+            return pokemon.id !== winnerId
+              ? pokemon
+              : { ...pokemon, wins: newWins, base_experience: newXP };
+          }),
+        );
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }
+  };
+
+  const saveLoser = async (loserId) => {
+    const loser = pokemons.find((pokemon) => {
+      return loserId === pokemon.id;
+    });
+
+    if (!loser) {
+      throw new Error(`Loser with ${loserId} not found`);
+    }
+
+    const newLosses = loser.losses + 1;
+    const firstLoss = {
+      pokemonId: loser.id,
+      losses: newLosses,
+    };
+
+    if (loser.overrideId === null) {
+      try {
+        const upload = await fetch(`${DB_URL}/pokemonOverrides`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(firstLoss),
+        });
+        if (!upload.ok) {
+          throw new Error(`Response: ${upload.status}`);
+        }
+        const uploadResult = await upload.json();
+
+        setPokemons((previousPokemons) =>
+          previousPokemons.map((pokemon) => {
+            return pokemon.id !== loserId
+              ? pokemon
+              : { ...pokemon, losses: newLosses, overrideId: uploadResult.id };
+          }),
+        );
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    } else {
+      try {
+        const reupload = await fetch(
+          `${DB_URL}/pokemonOverrides/${loser.overrideId}`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ losses: newLosses }),
+          },
+        );
+        if (!reupload.ok) {
+          throw new Error(`Response: ${reupload.status}`);
+        }
+        setPokemons((previousPokemons) =>
+          previousPokemons.map((pokemon) => {
+            return pokemon.id !== loserId
+              ? pokemon
+              : { ...pokemon, losses: newLosses };
+          }),
+        );
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }
+  };
+
   const value = {
     pokemons,
     isLoading,
@@ -111,6 +250,8 @@ const PokemonProvider = ({ children }) => {
     addToArena,
     removeFromArena,
     clearArena,
+    saveWinner,
+    saveLoser,
   };
 
   return (
