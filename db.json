@@ -6,36 +6,8 @@
       "password": "Haslo123!",
       "favourites": [],
       "id": 1
-    },
-    {
-      "name": "Marlenka",
-      "email": "marlenka@onet.pl",
-      "password": "Maslo123!",
-      "favourites": [],
-      "id": 2
     }
   ],
-  "pokemonOverrides": [
-    {
-      "pokemonId": 11,
-      "wins": 4,
-      "base_experience": 112,
-      "id": 1,
-      "losses": 1
-    },
-    {
-      "pokemonId": 6,
-      "wins": 2,
-      "base_experience": 260,
-      "id": 2
-    },
-    {
-      "pokemonId": 1,
-      "height": 7,
-      "weight": 69,
-      "base_experience": 160,
-      "id": 3
-    }
-  ],
+  "pokemonOverrides": [],
   "customPokemons": []
 }

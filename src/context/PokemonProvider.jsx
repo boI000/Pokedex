@@ -68,7 +68,30 @@ const PokemonProvider = ({ children }) => {
           };
         });
 
-        setPokemons(pokemonsWithOverride);
+        const pokemonsWithOverrideFinal = pokemonsWithOverride.map(
+          (pokemon) => {
+            return { ...pokemon, source: "api" };
+          },
+        );
+
+        const customResponse = await fetch(`${DB_URL}/customPokemons`);
+
+        if (!customResponse.ok) {
+          throw new Error(`Response: ${customResponse.status}`);
+        }
+
+        const customPokemons = await customResponse.json();
+
+        const customPokemonsFinal = customPokemons.map((pokemon) => {
+          return { ...pokemon, source: "custom" };
+        });
+
+        const finalPokemons = [
+          ...pokemonsWithOverrideFinal,
+          ...customPokemonsFinal,
+        ];
+
+        setPokemons(finalPokemons);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -87,6 +110,34 @@ const PokemonProvider = ({ children }) => {
     }
 
     const payload = { pokemonId: foundPokemon.id, ...updates };
+
+    if (foundPokemon.source === "custom") {
+      try {
+        const upload = await fetch(
+          `${DB_URL}/customPokemons/${foundPokemon.id}`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updates),
+          },
+        );
+        if (!upload.ok) {
+          throw new Error(`Response: ${upload.status}`);
+        }
+
+        setPokemons((previousPokemons) =>
+          previousPokemons.map((pokemon) => {
+            return pokemon.id !== foundPokemon.id
+              ? pokemon
+              : { ...pokemon, ...updates };
+          }),
+        );
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+      return;
+    }
 
     if (foundPokemon.overrideId === null) {
       try {
@@ -180,6 +231,30 @@ const PokemonProvider = ({ children }) => {
       base_experience: newXP,
     };
 
+    if (winner.source === "custom") {
+      try {
+        const upload = await fetch(`${DB_URL}/customPokemons/${winner.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ wins: newWins, base_experience: newXP }),
+        });
+        if (!upload.ok) {
+          throw new Error(`Response: ${upload.status}`);
+        }
+        setPokemons((previousPokemons) =>
+          previousPokemons.map((pokemon) => {
+            return pokemon.id !== winner.id
+              ? pokemon
+              : { ...pokemon, wins: newWins, base_experience: newXP };
+          }),
+        );
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+      return;
+    }
+
     if (winner.overrideId === null) {
       try {
         const upload = await fetch(`${DB_URL}/pokemonOverrides`, {
@@ -251,6 +326,30 @@ const PokemonProvider = ({ children }) => {
       losses: newLosses,
     };
 
+    if (loser.source === "custom") {
+      try {
+        const upload = await fetch(`${DB_URL}/customPokemons/${loser.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ losses: newLosses }),
+        });
+        if (!upload.ok) {
+          throw new Error(`Response: ${upload.status}`);
+        }
+        setPokemons((previousPokemons) =>
+          previousPokemons.map((pokemon) => {
+            return pokemon.id !== loser.id
+              ? pokemon
+              : { ...pokemon, losses: newLosses };
+          }),
+        );
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+      return;
+    }
+
     if (loser.overrideId === null) {
       try {
         const upload = await fetch(`${DB_URL}/pokemonOverrides`, {
@@ -301,6 +400,59 @@ const PokemonProvider = ({ children }) => {
     }
   };
 
+  const createPokemon = async (data, imageId) => {
+    const isImageUsed = pokemons.some(
+      (pokemon) => pokemon.source === "custom" && pokemon.imageId === imageId,
+    );
+
+    if (isImageUsed) {
+      throw new Error(`Image ${imageId} is already used`);
+    }
+
+    const newPokemon = {
+      id: imageId,
+      imageId,
+      source: "custom",
+      name: data.name,
+      weight: data.weight,
+      height: data.height,
+      base_experience: data.base_experience,
+      wins: 0,
+      losses: 0,
+      sprites: {
+        front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${imageId}.png`,
+        other: {
+          "official-artwork": {
+            front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${imageId}.png`,
+          },
+        },
+      },
+      types: [],
+      stats: [],
+      abilities: [],
+    };
+
+    try {
+      const upload = await fetch(`${DB_URL}/customPokemons`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newPokemon),
+      });
+      if (!upload.ok) {
+        throw new Error(`Response: ${upload.status}`);
+      }
+      const uploadResult = await upload.json();
+
+      setPokemons((previousPokemons) => [
+        ...previousPokemons,
+        { ...uploadResult, source: "custom" },
+      ]);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
   const value = {
     pokemons,
     isLoading,
@@ -312,6 +464,7 @@ const PokemonProvider = ({ children }) => {
     saveWinner,
     saveLoser,
     editPokemon,
+    createPokemon,
   };
 
   return (
