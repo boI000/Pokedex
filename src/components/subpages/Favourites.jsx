@@ -17,7 +17,8 @@ const Favourites = () => {
   const favouritePokemons = pokemons.filter((pokemon) =>
     currentUser.favourites.some(
       (favourite) =>
-        favourite.source === "api" && favourite.pokemonId === pokemon.id,
+        favourite.source === pokemon.source &&
+        favourite.pokemonId === pokemon.id,
     ),
   );
 

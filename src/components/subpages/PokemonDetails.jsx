@@ -74,7 +74,8 @@ const PokemonDetails = () => {
   const isFavourite = currentUser
     ? currentUser.favourites.some(
         (favourite) =>
-          favourite.source === "api" && favourite.pokemonId === foundPokemon.id,
+          favourite.source === foundPokemon.source &&
+          favourite.pokemonId === foundPokemon.id,
       )
     : false;
 
@@ -85,13 +86,13 @@ const PokemonDetails = () => {
       newFavourites = currentUser.favourites.filter(
         (favourite) =>
           !(
-            favourite.source === "api" &&
+            favourite.source === foundPokemon.source &&
             favourite.pokemonId === foundPokemon.id
           ),
       );
     } else {
       const newFavourite = {
-        source: "api",
+        source: foundPokemon.source,
         pokemonId: foundPokemon.id,
       };
       newFavourites = [...currentUser.favourites, newFavourite];
