@@ -79,6 +79,65 @@ const PokemonProvider = ({ children }) => {
     fetchPokemons();
   }, []);
 
+  const editPokemon = async (pokemonId, updates) => {
+    const foundPokemon = pokemons.find((pokemon) => pokemonId === pokemon.id);
+
+    if (!foundPokemon) {
+      throw new Error("Pokemon not found");
+    }
+
+    const payload = { pokemonId: foundPokemon.id, ...updates };
+
+    if (foundPokemon.overrideId === null) {
+      try {
+        const upload = await fetch(`${DB_URL}/pokemonOverrides`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (!upload.ok) {
+          throw new Error(`Response: ${upload.status}`);
+        }
+        const uploadResult = await upload.json();
+
+        setPokemons((previousPokemons) =>
+          previousPokemons.map((pokemon) => {
+            return pokemon.id !== foundPokemon.id
+              ? pokemon
+              : { ...pokemon, ...updates, overrideId: uploadResult.id };
+          }),
+        );
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    } else {
+      try {
+        const upload = await fetch(
+          `${DB_URL}/pokemonOverrides/${foundPokemon.overrideId}`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updates),
+          },
+        );
+        if (!upload.ok) {
+          throw new Error(`Response: ${upload.status}`);
+        }
+        setPokemons((previousPokemons) =>
+          previousPokemons.map((pokemon) => {
+            return pokemon.id !== foundPokemon.id
+              ? pokemon
+              : { ...pokemon, ...updates };
+          }),
+        );
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }
+  };
+
   const addToArena = (pokemon) => {
     setArenaPokemons((previousArena) => {
       const isAlreadyInArena = previousArena.some(
@@ -252,6 +311,7 @@ const PokemonProvider = ({ children }) => {
     clearArena,
     saveWinner,
     saveLoser,
+    editPokemon,
   };
 
   return (

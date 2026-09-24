@@ -27,7 +27,7 @@ const navLinks = [
     end: true,
   },
   { path: "/pokedex", label: "Pokedex" },
-  { path: "/add-pokemon", label: "Add Pokemon" },
+  { path: "/edit", label: "Edit Pokemon" },
   { path: "/favourites", label: "Favourites" },
   { path: "/arena", label: "Arena" },
   { path: "/ranking", label: "Ranking" },

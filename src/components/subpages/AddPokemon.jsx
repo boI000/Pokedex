@@ -1,5 +1,5 @@
 const AddPokemon = () => {
-  return <p>Add new Pokemon</p>;
+  return <p>Add pokemon</p>;
 };
 
 export default AddPokemon;

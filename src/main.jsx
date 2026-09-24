@@ -2,7 +2,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Landing from "./components/subpages/Landing.jsx";
 import Pokedex from "./components/subpages/Pokedex.jsx";
 import PokemonDetails from "./components/subpages/PokemonDetails.jsx";
-import AddPokemon from "./components/subpages/AddPokemon.jsx";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
@@ -16,6 +15,9 @@ import PokemonProvider from "./context/PokemonProvider.jsx";
 import { SnackbarProvider } from "notistack";
 import AuthProvider from "./context/AuthProvider.jsx";
 import ProtectedRoute from "./components/shared/ProtectedRoute.jsx";
+import Edit from "./components/subpages/Edit.jsx";
+import AddPokemon from "./components/subpages/AddPokemon.jsx";
+import EditPokemon from "./components/subpages/EditPokemon.jsx";
 
 const router = createBrowserRouter([
   {
@@ -47,8 +49,16 @@ const router = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
           {
-            path: "add-pokemon",
+            path: "edit",
+            element: <Edit />,
+          },
+          {
+            path: "edit/create",
             element: <AddPokemon />,
+          },
+          {
+            path: "edit/:id",
+            element: <EditPokemon />,
           },
           {
             path: "arena",

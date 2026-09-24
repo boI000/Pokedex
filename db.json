@@ -28,6 +28,13 @@
       "wins": 2,
       "base_experience": 260,
       "id": 2
+    },
+    {
+      "pokemonId": 1,
+      "height": 7,
+      "weight": 69,
+      "base_experience": 160,
+      "id": 3
     }
   ],
   "customPokemons": []
