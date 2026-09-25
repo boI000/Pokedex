@@ -79,6 +79,7 @@ const AddPokemon = () => {
         {selectedImageId}
         <button
           type="button"
+          disabled={selectedImageId === 1025}
           onClick={() => setSelectedImageId((prev) => prev + 1)}
         >
           next
