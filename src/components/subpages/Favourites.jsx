@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { useAuthContext } from "../../context/AuthProvider";
-import { usePokemonContext } from "../../context/PokemonProvider";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import { usePokemonContext } from "../../hooks/usePokemonContext";
 import PokemonCard from "./PokemonCard";
 import { Link } from "react-router-dom";
 
@@ -27,8 +27,7 @@ const Favourites = () => {
   if (favouritePokemons.length === 0)
     return (
       <p>
-        You have no favourite pokemons.{" "}
-        <Link to="/pokedex">Add them here!</Link>
+        You have no favourite pokemons. <Link to="/">Add them here!</Link>
       </p>
     );
   return (

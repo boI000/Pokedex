@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Landing from "./components/subpages/Landing.jsx";
 import Pokedex from "./components/subpages/Pokedex.jsx";
 import PokemonDetails from "./components/subpages/PokemonDetails.jsx";
 import { StrictMode } from "react";
@@ -18,36 +17,38 @@ import ProtectedRoute from "./components/shared/ProtectedRoute.jsx";
 import Edit from "./components/subpages/Edit.jsx";
 import AddPokemon from "./components/subpages/AddPokemon.jsx";
 import EditPokemon from "./components/subpages/EditPokemon.jsx";
+import GuestRoute from "./components/shared/GuestRoute.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      { index: true, element: <Landing /> },
+      { index: true, element: <Pokedex /> },
       {
-        path: "pokedex",
-        element: <Pokedex />,
-      },
-      {
-        path: "pokedex/:id",
+        path: "pokemon/:id",
         element: <PokemonDetails />,
       },
       {
-        path: "register",
-        element: <Register />,
-      },
-      {
-        path: "login",
-        element: <Login />,
-      },
-      {
-        path: "ranking",
-        element: <Ranking />,
+        element: <GuestRoute />,
+        children: [
+          {
+            path: "register",
+            element: <Register />,
+          },
+          {
+            path: "login",
+            element: <Login />,
+          },
+        ],
       },
       {
         element: <ProtectedRoute />,
         children: [
+          {
+            path: "ranking",
+            element: <Ranking />,
+          },
           {
             path: "edit",
             element: <Edit />,

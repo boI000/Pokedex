@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
-import { usePokemonContext } from "../../context/PokemonProvider";
+import { usePokemonContext } from "../../hooks/usePokemonContext";
 import styled from "styled-components";
-import { useAuthContext } from "../../context/AuthProvider";
+import { useAuthContext } from "../../hooks/useAuthContext";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
 
@@ -185,7 +185,7 @@ const PokemonDetails = () => {
           );
         })}
       </AbilitiesWrapper>
-      <BackLink to={"/pokedex"}>Return to POKEDEX</BackLink>
+      <BackLink to={"/"}>Return to POKEDEX</BackLink>
     </>
   );
 };

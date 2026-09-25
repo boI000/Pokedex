@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { usePokemonContext } from "../../context/PokemonProvider";
+import { usePokemonContext } from "../../hooks/usePokemonContext";
 import PokemonCard from "./PokemonCard";
 import { useState } from "react";
 

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { usePokemonContext } from "../../context/PokemonProvider";
+import { usePokemonContext } from "../../hooks/usePokemonContext";
 
 const Edit = () => {
   const { pokemons, isLoading, error } = usePokemonContext();

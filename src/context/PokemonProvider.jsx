@@ -1,6 +1,6 @@
-import { useEffect, useState, createContext, useContext } from "react";
+import { useEffect, useState } from "react";
+import PokemonContext from "./PokemonContext";
 
-const PokemonContext = createContext();
 const POKE_API_URL = "https://pokeapi.co/api/v2";
 const DB_URL = "http://localhost:3000";
 
@@ -53,11 +53,11 @@ const PokemonProvider = ({ children }) => {
             return { ...pokemon, wins: 0, losses: 0, overrideId: null };
           }
 
-          const {
-            id: overrideId,
-            pokemonId,
-            ...overrideData
-          } = pokemonOverride;
+          const overrideId = pokemonOverride.id;
+          const overrideData = { ...pokemonOverride };
+
+          delete overrideData.id;
+          delete overrideData.pokemonId;
 
           return {
             ...pokemon,
@@ -470,10 +470,6 @@ const PokemonProvider = ({ children }) => {
   return (
     <PokemonContext.Provider value={value}>{children}</PokemonContext.Provider>
   );
-};
-
-export const usePokemonContext = () => {
-  return useContext(PokemonContext);
 };
 
 export default PokemonProvider;

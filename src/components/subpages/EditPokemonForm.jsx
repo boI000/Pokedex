@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { usePokemonContext } from "../../context/PokemonProvider";
+import { usePokemonContext } from "../../hooks/usePokemonContext";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 

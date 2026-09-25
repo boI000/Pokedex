@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useAuthContext } from "../../context/AuthProvider";
+import { useAuthContext } from "../../hooks/useAuthContext";
 import { useSnackbar } from "notistack";
 import { useLocation, useNavigate } from "react-router-dom";
 

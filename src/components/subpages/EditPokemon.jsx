@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { usePokemonContext } from "../../context/PokemonProvider";
+import { usePokemonContext } from "../../hooks/usePokemonContext";
 import EditPokemonForm from "./EditPokemonForm";
 
 const EditPokemon = () => {

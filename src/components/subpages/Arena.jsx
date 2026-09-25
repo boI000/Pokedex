@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { usePokemonContext } from "../../context/PokemonProvider";
+import { usePokemonContext } from "../../hooks/usePokemonContext";
 import { enqueueSnackbar } from "notistack";
 
 const Arena = () => {

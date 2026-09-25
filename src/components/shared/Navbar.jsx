@@ -1,5 +1,5 @@
-import { NavLink } from "react-router-dom";
-import { useAuthContext } from "../../context/AuthProvider";
+import { Link, NavLink } from "react-router-dom";
+import { useAuthContext } from "../../hooks/useAuthContext";
 import styled from "styled-components";
 import pokemonLogo from "../../assets/pokemon_logo.png";
 
@@ -20,13 +20,14 @@ const StyledList = styled.ul`
   margin: 20px 0px 20px;
 `;
 
-const navLinks = [
+const publicLinks = [
   {
     path: "/",
-    label: "Landing",
+    label: "Pokedex",
     end: true,
   },
-  { path: "/pokedex", label: "Pokedex" },
+];
+const protectedLinks = [
   { path: "/edit", label: "Edit Pokemon" },
   { path: "/favourites", label: "Favourites" },
   { path: "/arena", label: "Arena" },
@@ -39,9 +40,11 @@ const Navbar = () => {
   return (
     <header>
       <NavBarWrapper>
-        <StyledImg src={pokemonLogo} alt="pokemon logo" />
+        <Link to={"/"}>
+          <StyledImg src={pokemonLogo} alt="pokemon logo" />
+        </Link>
         <StyledList>
-          {navLinks.map(({ path, label, end }) => {
+          {publicLinks.map(({ path, label, end }) => {
             return (
               <li key={path}>
                 <NavLink to={path} end={end}>
@@ -50,6 +53,16 @@ const Navbar = () => {
               </li>
             );
           })}
+          {currentUser &&
+            protectedLinks.map(({ path, label, end }) => {
+              return (
+                <li key={path}>
+                  <NavLink to={path} end={end}>
+                    {label}
+                  </NavLink>
+                </li>
+              );
+            })}
           {!currentUser && !isAuthLoading && (
             <>
               <li>

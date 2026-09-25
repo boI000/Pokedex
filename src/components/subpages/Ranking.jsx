@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { usePokemonContext } from "../../context/PokemonProvider";
+import { usePokemonContext } from "../../hooks/usePokemonContext";
 import { Link } from "react-router-dom";
 
 const Ranking = () => {
@@ -23,7 +23,7 @@ const Ranking = () => {
           ({ id, name, base_experience, weight, height, wins }) => {
             return (
               <li key={id}>
-                <Link to={`/pokedex/${id}`}>
+                <Link to={`/pokemon/${id}`}>
                   <p>{name}</p>
                 </Link>
                 {`XP: ${base_experience}, Weight: ${weight}, Height: ${height}, Wins: ${wins}`}

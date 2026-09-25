@@ -15,7 +15,7 @@ const PokemonCard = ({ pokemon }) => {
   const { id, name, weight, height, base_experience, sprites, types } = pokemon;
 
   return (
-    <Link to={`/pokedex/${id}`}>
+    <Link to={`/pokemon/${id}`}>
       <PokemonCardStyled>
         <img src={sprites.front_default} alt={name} />
         <p>{name.toUpperCase()}</p>
