@@ -8,25 +8,41 @@ const Ranking = () => {
 
   const sortedPokemons = [...pokemons].sort((a, b) => b[sortBy] - a[sortBy]);
 
-  if (isLoading) return <p>Loading pokemon ranking...</p>;
-  if (error) return <p>{error}</p>;
+  if (isLoading) return <p className="state-message">Ładowanie rankingu...</p>;
+  if (error) return <p className="state-message">Błąd: {error}</p>;
   return (
     <>
-      <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-        <option value="wins">Wins</option>
-        <option value="base_experience">XP</option>
-        <option value="weight">Weight</option>
-        <option value="height">Height</option>
-      </select>
-      <ul>
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Ranking</h1>
+          <p className="page-subtitle">Porównaj wyniki walk Pokemonów</p>
+        </div>
+        <div className="ranking-toolbar">
+          <label htmlFor="sort-ranking">Sortuj:</label>
+          <select
+            className="control"
+            id="sort-ranking"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="wins">Wygrane</option>
+            <option value="base_experience">Doświadczenie</option>
+            <option value="weight">Waga</option>
+            <option value="height">Wzrost</option>
+          </select>
+        </div>
+      </div>
+      <ul className="ranking-list">
         {sortedPokemons.map(
-          ({ id, name, base_experience, weight, height, wins }) => {
+          ({ id, name, base_experience, weight, height, wins }, index) => {
             return (
-              <li key={id}>
-                <Link to={`/pokemon/${id}`}>
-                  <p>{name}</p>
-                </Link>
-                {`XP: ${base_experience}, Weight: ${weight}, Height: ${height}, Wins: ${wins}`}
+              <li className="ranking-row" key={id}>
+                <span className="ranking-position">#{index + 1}</span>
+                <Link to={`/pokemon/${id}`}>{name}</Link>
+                <span>XP: {base_experience}</span>
+                <span>Waga: {weight / 10} kg</span>
+                <span>Wzrost: {height * 10} cm</span>
+                <span>Wygrane: {wins}</span>
               </li>
             );
           },

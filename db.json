@@ -4,10 +4,58 @@
       "name": "jan",
       "email": "kowalski@gmail.com",
       "password": "Haslo123!",
-      "favourites": [],
+      "favourites": [
+        {
+          "source": "api",
+          "pokemonId": 2
+        },
+        {
+          "source": "api",
+          "pokemonId": 12
+        }
+      ],
       "id": 1
+    },
+    {
+      "name": "Marlenka",
+      "email": "marlena@onet.pl",
+      "password": "Maslo123!",
+      "favourites": [
+        {
+          "source": "api",
+          "pokemonId": 15
+        },
+        {
+          "source": "api",
+          "pokemonId": 25
+        }
+      ],
+      "id": 2
     }
   ],
-  "pokemonOverrides": [],
+  "pokemonOverrides": [
+    {
+      "pokemonId": 12,
+      "wins": 1,
+      "base_experience": 188,
+      "id": 1
+    },
+    {
+      "pokemonId": 2,
+      "losses": 1,
+      "id": 2
+    },
+    {
+      "pokemonId": 15,
+      "wins": 1,
+      "base_experience": 188,
+      "id": 3
+    },
+    {
+      "pokemonId": 25,
+      "losses": 1,
+      "id": 4
+    }
+  ],
   "customPokemons": []
 }

@@ -62,7 +62,7 @@ const Arena = () => {
       setBattleResult({ type: "winner", winnerId });
     } catch (error) {
       console.error(error);
-      enqueueSnackbar("Error has occured while saving fight results", {
+      enqueueSnackbar("Nie udało się zapisać wyniku walki", {
         variant: "error",
       });
     } finally {
@@ -81,51 +81,74 @@ const Arena = () => {
 
   return (
     <>
-      {arenaSlots.map((slotIndex) => {
-        const pokemon = arenaPokemons[slotIndex];
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Arena</h1>
+          <p className="page-subtitle">Wybierz dwa Pokemony i walcz</p>
+        </div>
+      </div>
+      <div className="arena-grid">
+        {arenaSlots.map((slotIndex) => {
+          const pokemon = arenaPokemons[slotIndex];
 
-        if (pokemon) {
-          return (
-            <div
-              key={slotIndex}
-              style={{ opacity: loserPokemon?.id === pokemon.id ? 0.4 : 1 }}
-            >
-              <p>{pokemon.name}</p>
-              <button
-                type="button"
-                onClick={() => {
-                  removeFromArena(pokemon.id);
-                  setBattleResult(null);
-                }}
-                disabled={isSavingBattle}
+          if (pokemon) {
+            return (
+              <div
+                className="arena-slot"
+                key={slotIndex}
+                style={{ opacity: loserPokemon?.id === pokemon.id ? 0.4 : 1 }}
               >
-                Remove from arena
-              </button>
+                <div>
+                  <img src={pokemon.sprites.front_default} alt={pokemon.name} />
+                  <h2>{pokemon.name}</h2>
+                  <button
+                    className="danger-button"
+                    type="button"
+                    onClick={() => {
+                      removeFromArena(pokemon.id);
+                      setBattleResult(null);
+                    }}
+                    disabled={isSavingBattle}
+                  >
+                    Usuń z areny
+                  </button>
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <div className="arena-slot arena-empty" key={slotIndex}>
+              Wolne miejsce
             </div>
           );
-        }
-
-        return <div key={slotIndex}>Empty Slot</div>;
-      })}
-      <button
-        type="button"
-        disabled={arenaPokemons.length !== 2 || isSavingBattle}
-        onClick={handleFight}
-      >
-        FIGHT!
-      </button>
-      <button
-        type="button"
-        onClick={() => {
-          clearArena();
-          setBattleResult(null);
-        }}
-        disabled={arenaPokemons.length < 1 || isSavingBattle}
-      >
-        Clear Arena
-      </button>
-      {battleResult?.type === "draw" && <p>DRAW!</p>}
-      {winnerPokemon && <p>Winner: {winnerPokemon.name}</p>}
+        })}
+      </div>
+      <div className="arena-actions">
+        <button
+          className="primary-button"
+          type="button"
+          disabled={arenaPokemons.length !== 2 || isSavingBattle}
+          onClick={handleFight}
+        >
+          {isSavingBattle ? "Zapisywanie..." : "WALCZ!"}
+        </button>
+        <button
+          className="secondary-button"
+          type="button"
+          onClick={() => {
+            clearArena();
+            setBattleResult(null);
+          }}
+          disabled={arenaPokemons.length < 1 || isSavingBattle}
+        >
+          Wyczyść arenę
+        </button>
+      </div>
+      {battleResult?.type === "draw" && <p className="battle-result">REMIS!</p>}
+      {winnerPokemon && (
+        <p className="battle-result">Zwycięzca: {winnerPokemon.name}</p>
+      )}
     </>
   );
 };

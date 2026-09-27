@@ -5,44 +5,102 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
 
-// todo: $types list, styles
 const TypeBadge = styled.span`
-  color: ${({ $type }) => ($type === "grass" ? "green" : "white")};
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 5px 12px;
+  color: #fff;
+  background: ${({ $type }) =>
+    ({
+      bug: "#729f3f",
+      dragon: "#5b4ecb",
+      electric: "#c49a08",
+      fairy: "#c85ca4",
+      fighting: "#a7482d",
+      fire: "#d95c2b",
+      flying: "#6279b8",
+      ghost: "#625a9c",
+      grass: "#4f9141",
+      ground: "#9b753b",
+      ice: "#398da4",
+      normal: "#737b80",
+      poison: "#84469a",
+      psychic: "#bd4169",
+      rock: "#8b7b3f",
+      steel: "#607987",
+      water: "#3379b7",
+    })[$type] || "#53636e"};
+  font-size: 0.8rem;
+  font-weight: 900;
 `;
 
 const TypesWrapper = styled.div`
   display: flex;
-  gap: 20px;
-  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
 `;
 
 const StatsRow = styled.div`
   display: flex;
   width: 100%;
+  align-items: center;
   justify-content: space-between;
+  gap: 16px;
+  padding: 7px 0;
+
+  p {
+    margin: 0;
+    text-transform: capitalize;
+  }
+
+  strong {
+    min-width: 36px;
+    text-align: right;
+  }
 `;
 
 const StatsWrapper = styled.div`
   width: 100%;
   margin: 0 auto;
   max-width: 300px;
+  padding: 12px;
+  border-radius: 6px;
+  background: var(--surface-muted);
 `;
 
 const AbilitiesWrapper = styled.div`
   display: flex;
   justify-content: center;
   gap: 20px;
+  flex-wrap: wrap;
+
+  p {
+    margin: 0;
+    padding: 8px 12px;
+    border-radius: 5px;
+    background: var(--surface-muted);
+    font-weight: 800;
+  }
 `;
 
 const BackLink = styled(Link)`
   display: block;
   padding: 10px;
-  border: 2px solid black;
-  background-color: bisque;
+  border: 2px solid var(--border-strong);
+  color: #fff;
+  background: var(--primary);
   border-radius: 8px;
   margin: 20px auto;
   width: fit-content;
   text-decoration: none;
+  box-shadow: 0 4px 0 var(--primary-dark);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 var(--primary-dark);
+  }
 `;
 
 const PokemonDetails = () => {
@@ -56,9 +114,9 @@ const PokemonDetails = () => {
     (pokemon) => pokemon.id === parseInt(id, 10),
   );
 
-  if (isLoading) return <p>Wczytywanie Pokemona...</p>;
-  if (error) return <p>{error}</p>;
-  if (!foundPokemon) return <p>Nie znaleziono Pokemona</p>;
+  if (isLoading) return <p className="state-message">Ładowanie Pokemona...</p>;
+  if (error) return <p className="state-message">Błąd: {error}</p>;
+  if (!foundPokemon) return <p className="state-message">Nie znaleziono Pokemona.</p>;
 
   const {
     name,
@@ -113,17 +171,17 @@ const PokemonDetails = () => {
       updateCurrentUser({ favourites: newFavourites });
 
       if (isFavourite) {
-        enqueueSnackbar("Pokemon has been deleted from favourites", {
+        enqueueSnackbar("Pokemon został usunięty z ulubionych", {
           variant: "warning",
         });
       } else {
-        enqueueSnackbar("Pokemon has been added to favourites!", {
+        enqueueSnackbar("Pokemon został dodany do ulubionych", {
           variant: "success",
         });
       }
     } catch (error) {
       console.error(error);
-      enqueueSnackbar("An error has occurred. Try again!", {
+      enqueueSnackbar("Wystąpił błąd. Spróbuj ponownie.", {
         variant: "error",
       });
     } finally {
@@ -132,61 +190,63 @@ const PokemonDetails = () => {
   };
 
   return (
-    <>
-      {currentUser && (
-        <button type="button" onClick={toggleFavourite} disabled={isUpdating}>
-          {isFavourite ? "Remove from favourites" : "Add to favourites"}
-        </button>
-      )}
-      {currentUser && (
-        <button type="button" onClick={() => addToArena(foundPokemon)}>
-          Add to arena
-        </button>
-      )}
-      <img src={sprites.other["official-artwork"].front_default} alt={name} />
-      <h1>{name.toUpperCase()}</h1>
-      <h2>TYPES</h2>
-      <TypesWrapper>
-        {types.map((typeInfo) => {
-          return (
-            <TypeBadge $type={typeInfo.type.name} key={typeInfo.type.name}>
-              {typeInfo.type.name.toUpperCase()}
-            </TypeBadge>
-          );
-        })}
-      </TypesWrapper>
-      <h2>BASIC INFO</h2>
-      <dl>
-        <dt>Height</dt>
-        <dd>{height * 10} cm </dd>
-
-        <dt>Weight</dt>
-        <dd>{weight / 10} kg</dd>
-
-        <dt>Base experience</dt>
-        <dd>{base_experience} xp</dd>
-      </dl>
-      <h2>STATS</h2>
-      <StatsWrapper>
-        {stats.map((statInfo) => {
-          return (
-            <StatsRow key={statInfo.stat.name}>
-              <p>{statInfo.stat.name}</p>
-              <p>{statInfo.base_stat}</p>
-            </StatsRow>
-          );
-        })}
-      </StatsWrapper>
-      <h2>ABILITIES</h2>
-      <AbilitiesWrapper>
-        {abilities.map((abilityInfo) => {
-          return (
-            <p key={abilityInfo.ability.name}>{abilityInfo.ability.name}</p>
-          );
-        })}
-      </AbilitiesWrapper>
-      <BackLink to={"/"}>Return to POKEDEX</BackLink>
-    </>
+    <div className="details-shell">
+      <div className="details-top">
+        <div className="details-artwork">
+          <img src={sprites.other["official-artwork"].front_default} alt={name} />
+        </div>
+        <div className="details-info">
+          <p className="page-subtitle">Pokemon #{foundPokemon.id}</p>
+          <h1>{name}</h1>
+          <TypesWrapper>
+            {types.map((typeInfo) => (
+              <TypeBadge $type={typeInfo.type.name} key={typeInfo.type.name}>
+                {typeInfo.type.name.toUpperCase()}
+              </TypeBadge>
+            ))}
+          </TypesWrapper>
+          <div className="details-actions">
+            {currentUser && (
+              <button className="secondary-button" type="button" onClick={toggleFavourite} disabled={isUpdating}>
+                {isFavourite ? "Usuń z ulubionych" : "Dodaj do ulubionych"}
+              </button>
+            )}
+            {currentUser && (
+              <button className="primary-button" type="button" onClick={() => addToArena(foundPokemon)}>
+                Dodaj na arenę
+              </button>
+            )}
+          </div>
+          <dl className="basic-info">
+            <div><dt>Wzrost</dt><dd>{height * 10} cm</dd></div>
+            <div><dt>Waga</dt><dd>{weight / 10} kg</dd></div>
+            <div><dt>Doświadczenie</dt><dd>{base_experience} XP</dd></div>
+          </dl>
+        </div>
+      </div>
+      <div className="details-lower">
+        <section className="details-section">
+          <h2>Statystyki</h2>
+          <StatsWrapper>
+            {stats.map((statInfo) => (
+              <StatsRow key={statInfo.stat.name}>
+                <p>{statInfo.stat.name}</p>
+                <strong>{statInfo.base_stat}</strong>
+              </StatsRow>
+            ))}
+          </StatsWrapper>
+        </section>
+        <section className="details-section">
+          <h2>Umiejętności</h2>
+          <AbilitiesWrapper>
+            {abilities.map((abilityInfo) => (
+              <p key={abilityInfo.ability.name}>{abilityInfo.ability.name}</p>
+            ))}
+          </AbilitiesWrapper>
+        </section>
+      </div>
+      <BackLink to={"/"}>Wróć do Pokedexu</BackLink>
+    </div>
   );
 };
 

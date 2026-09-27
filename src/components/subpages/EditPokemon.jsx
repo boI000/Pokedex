@@ -10,9 +10,9 @@ const EditPokemon = () => {
     (pokemon) => pokemon.id === parseInt(id, 10),
   );
 
-  if (isLoading) return <p>Wczytywanie Pokemona...</p>;
-  if (error) return <p>{error}</p>;
-  if (!foundPokemon) return <p>Nie znaleziono Pokemona</p>;
+  if (isLoading) return <p className="state-message">Ładowanie Pokemona...</p>;
+  if (error) return <p className="state-message">Błąd: {error}</p>;
+  if (!foundPokemon) return <p className="state-message">Nie znaleziono Pokemona.</p>;
 
   return <EditPokemonForm pokemon={foundPokemon} />;
 };

@@ -7,19 +7,19 @@ import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 
 const createPokemonSchema = z.object({
-  name: z.string().trim().min(1, { error: "Pokemon name is required" }),
+  name: z.string().trim().min(1, { error: "Nazwa Pokemona jest wymagana" }),
   weight: z
-    .number({ error: "Weight is required" })
-    .int({ error: "Weight must be a whole number" })
-    .positive({ error: "Weight must be greater than 0" }),
+    .number({ error: "Waga jest wymagana" })
+    .int({ error: "Waga musi być liczbą całkowitą" })
+    .positive({ error: "Waga musi być większa od 0" }),
   height: z
-    .number({ error: "Height is required" })
-    .int({ error: "Height must be a whole number" })
-    .positive({ error: "Height must be greater than 0" }),
+    .number({ error: "Wzrost jest wymagany" })
+    .int({ error: "Wzrost musi być liczbą całkowitą" })
+    .positive({ error: "Wzrost musi być większy od 0" }),
   base_experience: z
-    .number({ error: "Experience is required" })
-    .int({ error: "Experience must be a whole number" })
-    .nonnegative({ error: "Experience cannot be negative" }),
+    .number({ error: "Doświadczenie jest wymagane" })
+    .int({ error: "Doświadczenie musi być liczbą całkowitą" })
+    .nonnegative({ error: "Doświadczenie nie może być ujemne" }),
 });
 
 const AddPokemon = () => {
@@ -41,13 +41,13 @@ const AddPokemon = () => {
   const onSubmit = async (data) => {
     try {
       await createPokemon(data, selectedImageId);
-      enqueueSnackbar(`New Pokemon: ${data.name} created successfully`, {
+      enqueueSnackbar(`Nowy Pokemon ${data.name} został dodany`, {
         variant: "success",
       });
       navigate("/");
     } catch (error) {
       console.error(error);
-      enqueueSnackbar("An error has occurred, try again", {
+      enqueueSnackbar("Wystąpił błąd. Spróbuj ponownie.", {
         variant: "error",
       });
     }
@@ -59,63 +59,63 @@ const AddPokemon = () => {
   );
 
   return (
-    <form noValidate onSubmit={handleSubmit(onSubmit)}>
-      <h1>Create Pokemon</h1>
+    <form className="app-form" noValidate onSubmit={handleSubmit(onSubmit)}>
+      <h1>Stwórz Pokemona</h1>
 
-      <img
-        src={imageUrl}
-        alt={`Pokemon artwork no. ${selectedImageId}`}
-        style={{ opacity: isImageUsed ? 0.35 : 1 }}
-      />
-      {isImageUsed && <p>Image already used!</p>}
-      <div>
+      <div className="artwork-picker">
+        <img src={imageUrl} alt={`Pokemon numer ${selectedImageId}`} style={{ opacity: isImageUsed ? 0.35 : 1 }} />
+        {isImageUsed && <p className="form-error">Ta grafika jest już używana.</p>}
+      </div>
+      <div className="image-navigation">
         <button
+          className="secondary-button"
           type="button"
           disabled={selectedImageId === 151}
           onClick={() => setSelectedImageId((prev) => prev - 1)}
         >
-          prev
+          Poprzedni
         </button>
         {selectedImageId}
         <button
+          className="secondary-button"
           type="button"
           disabled={selectedImageId === 1025}
           onClick={() => setSelectedImageId((prev) => prev + 1)}
         >
-          next
+          Następny
         </button>
       </div>
 
-      <label htmlFor="name">Name</label>
+      <label htmlFor="name">Nazwa</label>
       <input id="name" {...register("name")} />
-      {errors.name && <p>{errors.name.message}</p>}
+      {errors.name && <p className="form-error">{errors.name.message}</p>}
 
-      <label htmlFor="weight">Weight</label>
+      <label htmlFor="weight">Waga</label>
       <input
         id="weight"
         type="number"
         {...register("weight", { valueAsNumber: true })}
       />
-      {errors.weight && <p>{errors.weight.message}</p>}
+      {errors.weight && <p className="form-error">{errors.weight.message}</p>}
 
-      <label htmlFor="height">Height</label>
+      <label htmlFor="height">Wzrost</label>
       <input
         id="height"
         type="number"
         {...register("height", { valueAsNumber: true })}
       />
-      {errors.height && <p>{errors.height.message}</p>}
+      {errors.height && <p className="form-error">{errors.height.message}</p>}
 
-      <label htmlFor="base_experience">Experience</label>
+      <label htmlFor="base_experience">Doświadczenie</label>
       <input
         id="base_experience"
         type="number"
         {...register("base_experience", { valueAsNumber: true })}
       />
-      {errors.base_experience && <p>{errors.base_experience.message}</p>}
+      {errors.base_experience && <p className="form-error">{errors.base_experience.message}</p>}
 
-      <button type="submit" disabled={isSubmitting || isImageUsed}>
-        Create
+      <button className="primary-button" type="submit" disabled={isSubmitting || isImageUsed}>
+        {isSubmitting ? "Tworzenie..." : "Stwórz"}
       </button>
     </form>
   );

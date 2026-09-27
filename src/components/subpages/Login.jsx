@@ -6,8 +6,8 @@ import { useSnackbar } from "notistack";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const loginSchema = z.object({
-  email: z.email({ error: "Provide a valid e-mail address" }).toLowerCase(),
-  password: z.string().min(1, { error: "Provide a password" }),
+  email: z.email({ error: "Podaj poprawny adres e-mail" }).toLowerCase(),
+  password: z.string().min(1, { error: "Podaj hasło" }),
 });
 
 const Login = () => {
@@ -42,38 +42,39 @@ const Login = () => {
       const user = foundUser[0];
 
       if (!user || user.password !== data.password) {
-        enqueueSnackbar("Invalid email or password", {
+        enqueueSnackbar("Niepoprawny e-mail lub hasło", {
           variant: "error",
         });
         return;
       }
 
       login(user);
-      enqueueSnackbar("Login succeful", {
+      enqueueSnackbar("Zalogowano pomyślnie", {
         variant: "success",
       });
       reset();
       navigate("/");
     } catch (error) {
       console.error(error);
-      enqueueSnackbar("An error has occurred. Try again!", {
+      enqueueSnackbar("Wystąpił błąd. Spróbuj ponownie.", {
         variant: "error",
       });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form className="app-form" noValidate onSubmit={handleSubmit(onSubmit)}>
+      <h1>Logowanie</h1>
       {location.state?.message && <p>{location.state?.message}</p>}
-      <label htmlFor="email">Email</label>
+      <label htmlFor="email">E-mail</label>
       <input id="email" type="email" {...register("email")} />
-      {errors.email && <p>{errors.email.message}</p>}
-      <label htmlFor="password">Password</label>
+      {errors.email && <p className="form-error">{errors.email.message}</p>}
+      <label htmlFor="password">Hasło</label>
       <input id="password" type="password" {...register("password")} />
-      {errors.password && <p>{errors.password.message}</p>}
+      {errors.password && <p className="form-error">{errors.password.message}</p>}
 
-      <button type="submit" disabled={isSubmitting}>
-        Log in
+      <button className="primary-button" type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Logowanie..." : "Zaloguj się"}
       </button>
     </form>
   );

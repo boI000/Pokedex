@@ -4,7 +4,7 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 const ProtectedRoute = () => {
   const { currentUser, isAuthLoading } = useAuthContext();
 
-  if (isAuthLoading) return <p>Loading</p>;
+  if (isAuthLoading) return <p className="state-message">Ładowanie sesji...</p>;
   if (!currentUser)
     return (
       <Navigate

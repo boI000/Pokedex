@@ -7,17 +7,17 @@ import { useNavigate } from "react-router-dom";
 
 const editSchema = z.object({
   height: z
-    .number({ error: "Height is required" })
-    .int({ error: "Height must be a whole number" })
-    .positive({ error: "Height must be greater than 0" }),
+    .number({ error: "Wzrost jest wymagany" })
+    .int({ error: "Wzrost musi być liczbą całkowitą" })
+    .positive({ error: "Wzrost musi być większy od 0" }),
   weight: z
-    .number({ error: "Weight is required" })
-    .int({ error: "Weight must be a whole number" })
-    .positive({ error: "Weight must be greater than 0" }),
+    .number({ error: "Waga jest wymagana" })
+    .int({ error: "Waga musi być liczbą całkowitą" })
+    .positive({ error: "Waga musi być większa od 0" }),
   base_experience: z
-    .number({ error: "Experience is required" })
-    .int({ error: "Experience must be a whole number" })
-    .nonnegative({ error: "Experience cannot be negative" }),
+    .number({ error: "Doświadczenie jest wymagane" })
+    .int({ error: "Doświadczenie musi być liczbą całkowitą" })
+    .nonnegative({ error: "Doświadczenie nie może być ujemne" }),
 });
 
 const EditPokemonForm = ({ pokemon: foundPokemon }) => {
@@ -42,48 +42,48 @@ const EditPokemonForm = ({ pokemon: foundPokemon }) => {
   const onSubmit = async (data) => {
     try {
       await editPokemon(foundPokemon.id, data);
-      enqueueSnackbar(`${foundPokemon.name} attributes changed successfully`, {
+      enqueueSnackbar(`Zmieniono atrybuty ${foundPokemon.name}`, {
         variant: "success",
       });
       navigate("/");
     } catch (error) {
       console.error(error);
-      enqueueSnackbar("An error has occurred, try again", {
+      enqueueSnackbar("Wystąpił błąd. Spróbuj ponownie.", {
         variant: "error",
       });
     }
   };
 
   return (
-    <form noValidate onSubmit={handleSubmit(onSubmit)}>
-      <h1>Edit {foundPokemon.name}</h1>
+    <form className="app-form" noValidate onSubmit={handleSubmit(onSubmit)}>
+      <h1>Edytuj: {foundPokemon.name}</h1>
 
-      <label htmlFor="height">Height</label>
+      <label htmlFor="height">Wzrost</label>
       <input
         id="height"
         type="number"
         {...register("height", { valueAsNumber: true })}
       />
-      {errors.height && <p>{errors.height.message}</p>}
+      {errors.height && <p className="form-error">{errors.height.message}</p>}
 
-      <label htmlFor="weight">Weight</label>
+      <label htmlFor="weight">Waga</label>
       <input
         id="weight"
         type="number"
         {...register("weight", { valueAsNumber: true })}
       />
-      {errors.weight && <p>{errors.weight.message}</p>}
+      {errors.weight && <p className="form-error">{errors.weight.message}</p>}
 
-      <label htmlFor="base_experience">Experience</label>
+      <label htmlFor="base_experience">Doświadczenie</label>
       <input
         id="base_experience"
         type="number"
         {...register("base_experience", { valueAsNumber: true })}
       />
-      {errors.base_experience && <p>{errors.base_experience.message}</p>}
+      {errors.base_experience && <p className="form-error">{errors.base_experience.message}</p>}
 
-      <button type="submit" disabled={isSubmitting}>
-        Change attributes
+      <button className="primary-button" type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Zapisywanie..." : "Zmień atrybuty"}
       </button>
     </form>
   );

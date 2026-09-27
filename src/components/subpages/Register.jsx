@@ -21,25 +21,25 @@ const registerSchema = z
     name: z
       .string()
       .trim()
-      .min(3, { error: "Name must be at least 3 characters long" }),
-    email: z.email({ error: "Provide a valid e-mail address" }).toLowerCase(),
+      .min(3, { error: "Imię musi mieć co najmniej 3 znaki" }),
+    email: z.email({ error: "Podaj poprawny adres e-mail" }).toLowerCase(),
     password: z
       .string()
-      .min(8, { error: "Password must be at least 8 characters long" })
+      .min(8, { error: "Hasło musi mieć co najmniej 8 znaków" })
       .regex(/[A-Z]/, {
-        error: "Password must contain at least one capital character",
+        error: "Hasło musi zawierać co najmniej jedną wielką literę",
       })
-      .regex(/[0-9]/, { error: "Password must contain at least one number" })
+      .regex(/[0-9]/, { error: "Hasło musi zawierać co najmniej jedną cyfrę" })
       .regex(/[!@#$%^&*]/, {
-        error: "Password must contain at least one special character",
+        error: "Hasło musi zawierać co najmniej jeden znak specjalny",
       })
-      .regex(/^\S+$/, { error: "Password must not contain spaces" }),
+      .regex(/^\S+$/, { error: "Hasło nie może zawierać spacji" }),
     repeatPassword: z
       .string()
-      .min(8, { error: "Password must be at least 8 characters long" }),
+      .min(8, { error: "Hasło musi mieć co najmniej 8 znaków" }),
   })
   .refine((data) => data.password === data.repeatPassword, {
-    error: "Passwords do not match",
+    error: "Hasła nie są takie same",
     path: ["repeatPassword"],
   });
 
@@ -69,7 +69,7 @@ const Register = () => {
       }
       const existingUsers = await checkResponse.json();
       if (existingUsers.length > 0) {
-        enqueueSnackbar("User with this email already exists", {
+        enqueueSnackbar("Użytkownik z tym adresem e-mail już istnieje", {
           variant: "warning",
         });
         return;
@@ -86,14 +86,14 @@ const Register = () => {
       if (!createResponse.ok) {
         throw new Error(`Response : ${createResponse.status}`);
       }
-      enqueueSnackbar("Account created successfully", {
+      enqueueSnackbar("Konto zostało utworzone", {
         variant: "success",
       });
       reset();
       navigate("/login");
     } catch (error) {
       console.error(error);
-      enqueueSnackbar("An error has occurred. Try again!", {
+      enqueueSnackbar("Wystąpił błąd. Spróbuj ponownie.", {
         variant: "error",
       });
     }
@@ -101,27 +101,28 @@ const Register = () => {
 
   return (
     <FormWrapper>
-      <FormStyle noValidate onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="name">Name</label>
+      <FormStyle className="app-form" noValidate onSubmit={handleSubmit(onSubmit)}>
+        <h1>Rejestracja</h1>
+        <label htmlFor="name">Imię</label>
         <input id="name" {...register("name")} />
-        {errors.name && <p>{errors.name.message}</p>}
-        <label htmlFor="email">Email</label>
+        {errors.name && <p className="form-error">{errors.name.message}</p>}
+        <label htmlFor="email">E-mail</label>
         <input id="email" type="email" {...register("email")} />
-        {errors.email && <p>{errors.email.message}</p>}
-        <label htmlFor="password">Password</label>
+        {errors.email && <p className="form-error">{errors.email.message}</p>}
+        <label htmlFor="password">Hasło</label>
         <input id="password" type="password" {...register("password")} />
-        {errors.password && <p>{errors.password.message}</p>}
-        <label htmlFor="repeatPassword">Repeat password</label>
+        {errors.password && <p className="form-error">{errors.password.message}</p>}
+        <label htmlFor="repeatPassword">Powtórz hasło</label>
         <input
           id="repeatPassword"
           type="password"
           {...register("repeatPassword")}
         />
-        {errors.repeatPassword && <p>{errors.repeatPassword.message}</p>}
-        <button type="submit" disabled={isSubmitting}>
-          Register
+        {errors.repeatPassword && <p className="form-error">{errors.repeatPassword.message}</p>}
+        <button className="primary-button" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Tworzenie konta..." : "Zarejestruj się"}
         </button>
-        <Link to={"/login"}>Already have an account? Log in</Link>
+        <Link className="form-link" to={"/login"}>Masz już konto? Zaloguj się</Link>
       </FormStyle>
     </FormWrapper>
   );

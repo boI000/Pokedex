@@ -4,20 +4,32 @@ import { usePokemonContext } from "../../hooks/usePokemonContext";
 const Edit = () => {
   const { pokemons, isLoading, error } = usePokemonContext();
 
-  if (isLoading) return <p>Loading pokemons...</p>;
-  if (error) return <p>{error}</p>;
+  if (isLoading) return <p className="state-message">Ładowanie Pokemonów...</p>;
+  if (error) return <p className="state-message">Błąd: {error}</p>;
   return (
     <>
-      <Link to="/edit/create">Create new Pokemon!</Link>
-      <div>
-        <ul>
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Edycja Pokemonów</h1>
+          <p className="page-subtitle">
+            Zmień atrybuty lub stwórz własnego Pokemona
+          </p>
+        </div>
+        <Link className="button-link" to="/edit/create">
+          Stwórz Pokemona
+        </Link>
+      </div>
+      <div className="panel">
+        <ul className="edit-list">
           {pokemons.map((pokemon, index) => {
             return (
-              <li key={pokemon.id}>
-                {index + 1}
+              <li className="edit-row" key={pokemon.id}>
+                <strong>{index + 1}</strong>
                 <img src={pokemon.sprites.front_default} alt={pokemon.name} />
-                {pokemon.name.toUpperCase()}
-                <Link to={`/edit/${pokemon.id}`}>Edit pokemon</Link>
+                <span className="edit-name">{pokemon.name}</span>
+                <Link className="button-link" to={`/edit/${pokemon.id}`}>
+                  Edytuj
+                </Link>
               </li>
             );
           })}
