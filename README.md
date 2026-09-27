@@ -1,16 +1,88 @@
-# React + Vite
+# Pokedex
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Responsywna aplikacja React wykorzystująca PokeAPI oraz JSON Server. Umożliwia przeglądanie Pokemonów, zarządzanie ulubionymi Pokemonami, przeprowadzanie walk, edycję danych i tworzenie własnych Pokemonów.
 
-Currently, two official plugins are available:
+## Funkcje
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- lista pierwszych 150 Pokemonów z PokeAPI
+- wyszukiwanie i filtrowanie według typu
+- paginacja po 15 Pokemonów
+- dynamiczny widok szczegółów
+- rejestracja, logowanie i wylogowanie
+- odtwarzanie sesji przez LocalStorage
+- chronione trasy
+- dodawanie i usuwanie ulubionych
+- Arena dla maksymalnie dwóch Pokemonów
+- zapis wygranych, przegranych i doświadczenia
+- ranking Pokemonów
+- edycja istniejących Pokemonów
+- tworzenie własnych Pokemonów
+- jasny i ciemny motyw
+- responsywny interfejs
 
-## React Compiler
+## Technologie
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- Vite
+- React Router
+- Context API
+- React Hook Form
+- Zod
+- notistack
+- styled-components
+- Material UI
+- PokeAPI
+- JSON Server
 
-## Expanding the ESLint configuration
+## Instalacja
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+npm install
+
+## Uruchomienie
+
+Aplikacja wymaga jednoczesnego uruchomienia Vite oraz JSON Servera.
+
+W pierwszym terminalu:
+
+npm run server
+
+JSON Server będzie dostępny pod adresem:
+
+http://localhost:3000
+
+W drugim terminalu:
+
+npm run dev
+
+Adres aplikacji zostanie wyświetlony przez Vite, domyślnie:
+
+http://localhost:5173
+
+## Konto demonstracyjne
+
+E-mail: demo@pokedex.pl
+Hasło: Test123!
+
+Konto służy do testowania funkcjonalności dostępnych dla zalogowanego użytkownika.
+
+## Pozostałe polecenia
+
+npm run build
+npm run lint
+npm run preview
+
+## Dane
+
+PokeAPI jest źródłem bazowych danych pierwszych 150 Pokemonów.
+
+JSON Server przechowuje:
+
+- `users` - użytkowników i referencje do ulubionych
+- `pokemonOverrides` - lokalne zmiany Pokemonów z PokeAPI
+- `customPokemons` - pełne dane Pokemonów utworzonych przez użytkownika
+
+`PokemonProvider` łączy dane z PokeAPI, lokalne modyfikacje oraz customowe Pokemony w jedną kolekcję wykorzystywaną przez aplikację.
+
+## Uwierzytelnianie
+
+Autoryzacja jest symulacją opartą na JSON Server. LocalStorage przechowuje wyłącznie ID aktualnie zalogowanego użytkownika.

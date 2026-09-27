@@ -1,0 +1,34 @@
+{
+  "users": [
+    {
+      "name": "Demo",
+      "email": "demo@pokedex.pl",
+      "password": "Test123!",
+      "favourites": [
+        {
+          "source": "api",
+          "pokemonId": 2
+        },
+        {
+          "source": "api",
+          "pokemonId": 12
+        }
+      ],
+      "id": 1
+    }
+  ],
+  "pokemonOverrides": [
+    {
+      "pokemonId": 12,
+      "wins": 1,
+      "base_experience": 188,
+      "id": 1
+    },
+    {
+      "pokemonId": 2,
+      "losses": 1,
+      "id": 2
+    }
+  ],
+  "customPokemons": []
+}
