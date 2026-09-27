@@ -1,9 +1,9 @@
 {
   "users": [
     {
-      "name": "jan",
-      "email": "kowalski@gmail.com",
-      "password": "Haslo123!",
+      "name": "Demo",
+      "email": "demo@pokedex.pl",
+      "password": "Test123!",
       "favourites": [
         {
           "source": "api",
@@ -15,22 +15,6 @@
         }
       ],
       "id": 1
-    },
-    {
-      "name": "Marlenka",
-      "email": "marlena@onet.pl",
-      "password": "Maslo123!",
-      "favourites": [
-        {
-          "source": "api",
-          "pokemonId": 15
-        },
-        {
-          "source": "api",
-          "pokemonId": 25
-        }
-      ],
-      "id": 2
     }
   ],
   "pokemonOverrides": [
@@ -44,17 +28,6 @@
       "pokemonId": 2,
       "losses": 1,
       "id": 2
-    },
-    {
-      "pokemonId": 15,
-      "wins": 1,
-      "base_experience": 188,
-      "id": 3
-    },
-    {
-      "pokemonId": 25,
-      "losses": 1,
-      "id": 4
     }
   ],
   "customPokemons": []
